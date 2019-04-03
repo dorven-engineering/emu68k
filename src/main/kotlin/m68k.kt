@@ -1,6 +1,6 @@
 package xyz.lonjil.m68k
 
-enum class Register(n: Int) {
+enum class Register(val n: Int) {
     D0(0),
     D1(1),
     D2(2),
@@ -22,43 +22,14 @@ enum class Register(n: Int) {
 }
 
 class m68k(ram_size: Int) {
-    var ram: ByteArray
     var regs = IntArray(17)
 
-    init {
-        ram = ByteArray(ram_size)
-    }
-
     fun ReadRegister(reg: Register): Int {
-        return regs[reg as Int]
+        return regs[reg.n]
     }
     fun WriteRegister(reg: Register, word: Int) {
-        regs[reg as Int] = word
+        regs[reg.n] = word
     }
-
-    fun MemRead8(loc: Int): Byte {
-        return ram[loc]
-    }
-    fun MemRead16(loc: Int): Short {
-        return (ram[loc] as Int).shl(8).or(ram[loc+1] as Int) as Short
-    }
-    fun MemRead32(loc: Int): Int {
-        return (ram[loc] as Int).shl(8).or(ram[loc+1] as Int).shl(8).or(ram[loc+2] as Int).shl(8).or(ram[loc+3] as Int)
-    }
-    fun MemWrite8(loc: Int, byte: Byte) {
-        ram[loc] = byte
-    }
-    fun MemWrite16(loc: Int, short: Short) {
-        ram[loc] = (short as Int).shr(8) as Byte
-        ram[loc+1] = (short as Int).and(0xFF) as Byte
-    }
-    fun MemWrite32(loc: Int, int: Int) {
-        ram[loc] = int.shr(24) as Byte
-        ram[loc+1] = int.shr(16).and(0xFF) as Byte
-        ram[loc+2] = int.shr(8).and(0xFF) as Byte
-        ram[loc+3] = int.and(0xFF) as Byte
-    }
-
 }
 
 
