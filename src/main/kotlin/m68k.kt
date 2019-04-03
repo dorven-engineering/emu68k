@@ -16,13 +16,12 @@ enum class Register(val n: Int) {
     A5(12),
     A6(13),
     A7(14),
-    USP(14),
-    PC(15),
-    CCR(16),
+    PC(14),
+    CCR(15),
 }
 
-class m68k(ram_size: Int) {
-    var regs = IntArray(17)
+class M68k() {
+    var regs = IntArray(16)
 
     fun ReadRegister(reg: Register): Int {
         return regs[reg.n]
@@ -30,15 +29,7 @@ class m68k(ram_size: Int) {
     fun WriteRegister(reg: Register, word: Int) {
         regs[reg.n] = word
     }
-}
 
-
-
-enum class AddressingMode {
 
 }
 
-enum class Op {
-    Add,
-    Sub,
-}
