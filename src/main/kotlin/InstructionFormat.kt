@@ -6,7 +6,47 @@ enum class InstructionType {
     R,I,S,B,U,J,
 }
 
+val opcodeMask = BitField(0x7F)
 val baseOpMask = BitField(0x7C)
+val opInstLen1 = BitField(0x3)
+val opInstLen2 = BitField(0x1C)
+val immSignMask = BitField(1.shl(31))
+val immIMask = BitField(0xFFF.shl(20))
+val immSMask0_4 = BitField(0x1F.shl(6))
+val immSMask5_11 = BitField(0x7F.shl(25))
+val immBMask1_4 = BitField(0xF.shl(7))
+val immBMask5_10 = BitField(0x3F.shl(24))
+val immBMask11 = BitField(1.shl(6))
+val immBMask12 = immSignMask
+val immUMask12_31 = BitField(0xFFFFF.shl(11))
+val immJMask1_10 = BitField(0xA.shl(20))
+val immJMask11 = BitField(1.shl(19))
+val immJMask12_19 = BitField(0x3F.shl(11))
+val immJMask20 = immSignMask
+
+fun extend_sign(number: Int, bits: Int): Int {
+    val shift = 32 - bits
+    return number.shl(shift) shr(shift)
+}
+
+fun deshuffle(inst: Int, format: InstructionType): Int? {
+    return when (format) {
+        InstructionType.R -> null
+        InstructionType.I -> extend_sign(immIMask.getValue(inst),12)
+        InstructionType.S -> extend_sign(immSMask5_11.getValue(inst)
+            .shl(5).or(immSMask0_4.getValue(inst)),12)
+        InstructionType.B -> extend_sign(immBMask12.getValue(inst)
+            shl(12).or(immBMask11.getValue(inst).shl(11))
+            .or(immBMask5_10.getValue(inst).shl(5))
+            .or(immBMask1_4.getValue(inst).shl(1)),13)
+        InstructionType.U -> immUMask12_31.getValue(inst).shl(12)
+        InstructionType.J -> extend_sign(immJMask20.getValue(inst)
+            .shl(20).or(immJMask12_19.getValue(inst).shl(12))
+            .or(immJMask11.getValue(inst).shl(11))
+            .or(immJMask1_10.getValue(inst).shl(1)), 21)
+    }
+}
+
 
 enum class BaseOp(val value: Int) {
     LOAD        (0x00),
