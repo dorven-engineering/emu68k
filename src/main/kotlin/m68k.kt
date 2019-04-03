@@ -71,31 +71,3 @@ enum class Op {
     Add,
     Sub,
 }
-
-enum class MemoryAccessStatus {
-    Success,
-    Failure,
-    BadData,
-}
-
-data class ReadAccessResult<T>(val data: T, val status: MemoryAccessStatus, val timeTaken: Int)
-data class WriteAccessResult(val status: MemoryAccessStatus, val timeTaken: Int)
-
-interface MemoryDevice {
-    val deviceSize: Int
-
-    // All memory accesses should throw an error if you attempt to read past the end of the device, as this is not intended behavior due to
-    // the fact there are multiple MemoryDevices on one bus.
-
-    fun readByte(addr: Int): ReadAccessResult<Byte>
-    fun writeByte(addr: Int, data: Byte): WriteAccessResult
-
-    fun readWord(addr: Int): ReadAccessResult<Short>
-    fun writeWord(addr: Int, data: Short): WriteAccessResult
-
-    fun readDoubleWord(addr: Int): ReadAccessResult<Int>
-    fun writeDoubleWord(addr: Int, data: Int): WriteAccessResult
-
-    // DANGER DANGER avoid in actual emulation code. Intended for usage by, say, a debugger.
-    fun rawMemoryDevice(): ByteArray
-}
