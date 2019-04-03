@@ -1,4 +1,4 @@
-package xyz.lonjil.m68k
+package xyz.lonjil.risc5
 
 interface GenericDevice {
     fun reset() {

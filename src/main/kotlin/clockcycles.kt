@@ -1,4 +1,4 @@
-package xyz.lonjil.m68k
+package xyz.lonjil.risc5
 
 interface ClockedDevice : GenericDevice {
     // Is the cycle manager REQUIRED to actively call tick() on this device.
