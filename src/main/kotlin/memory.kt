@@ -1,7 +1,6 @@
 package xyz.lonjil.m68k
 
 import org.jetbrains.annotations.NotNull
-import java.nio.ByteBuffer
 import java.util.*
 
 enum class MemoryAccessType {
@@ -29,9 +28,17 @@ enum class MemoryAccessStatus {
     Unsupported,
 }
 
-data class ReadAccessResult<T>(val data: T, val status: MemoryAccessStatus)
+data class ReadAccessResult<T>(val data: T, val status: MemoryAccessStatus) {
+    fun expectValue(): T {
+        if (status != MemoryAccessStatus.Success) {
+            throw IllegalStateException("Memory bus handler failed to provide value that was required!")
+        } else {
+            return data
+        }
+    }
+}
 
-interface MemoryDevice {
+interface MemoryDevice : GenericDevice {
     val deviceSize: Int
 
     @NotNull
@@ -77,7 +84,7 @@ interface MemoryDevice {
     fun writeDoubleWordNoEmu(addr: Int, data: Int)
 }
 
-interface MemoryBusHandler {
+interface MemoryBusHandler : GenericDevice {
     val addressSpaceSize: Int
 
     @NotNull

@@ -2,7 +2,7 @@ package xyz.lonjil.m68k
 
 import kotlin.math.max
 
-interface ClockedDevice {
+interface ClockedDevice : GenericDevice {
     var usedCycles: Long
 
     // Is the cycle manager REQUIRED to actively call tick() on this device.
@@ -23,7 +23,7 @@ class CycleManager {
     val devices: ArrayList<ClockedDevice> = ArrayList()
 
     fun registerDevice(device: ClockedDevice) {
-        devices.add(device);
+        devices.add(device)
         device.registerCycleManager(this)
     }
 

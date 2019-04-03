@@ -3,17 +3,15 @@ package xyz.lonjil.m68k
 import java.nio.ByteBuffer
 
 
-class RAMDevice(size: Int, ramLatency: Int = 1, failLatency: Int = 1): MemoryDevice, ClockedDevice {
+class RAMDevice(size: Int, val ramLatency: Int = 1, val failLatency: Int = 1) : MemoryDevice, ClockedDevice {
     private val backingArray: ByteBuffer = ByteBuffer.allocate(size)
-    private val ramLatency: Int = ramLatency // Preserve provided latency
-    private val failLatency: Int = failLatency
-    private lateinit var manager: CycleManager
+    private lateinit var cycleManager: CycleManager
 
     override val deviceSize: Int = size
     override var usedCycles: Long = 0
 
-    override fun registerCycleManager(man: CycleManager) {
-        manager = man
+    override fun registerCycleManager(manager: CycleManager) {
+        cycleManager = manager
     }
 
     override fun tick() {
@@ -137,9 +135,8 @@ class RAMDevice(size: Int, ramLatency: Int = 1, failLatency: Int = 1): MemoryDev
 }
 
 // ROM access is instant :D If you want to change this, just implement all the cycle handling
-class ROMDevice(backing: ByteBuffer): MemoryDevice {
-    private val backingArray: ByteBuffer = backing
-    override val deviceSize: Int = backing.capacity()-1
+class ROMDevice(val backingArray: ByteBuffer) : MemoryDevice {
+    override val deviceSize: Int = backingArray.capacity() - 1
 
     override fun readByteNoEmu(addr: Int): Byte {
         if (addr < backingArray.capacity()) {

@@ -5,7 +5,7 @@ object InstructionSet {
     var knownOps: Int = 0
 
     init {
-        instructions = Array(65536, { i -> null }) // Null means invalid!
+        instructions = Array(65536, { _ -> null }) // Null means invalid!
     }
 
     fun addInstruction(opcode: Int, instr: Instruction) {
