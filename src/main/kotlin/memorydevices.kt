@@ -8,7 +8,6 @@ class RAMDevice(size: Int, val ramLatency: Int = 1, val failLatency: Int = 1) : 
     private lateinit var cycleManager: CycleManager
 
     override val deviceSize: Int = size
-    override var usedCycles: Long = 0
 
     override fun registerCycleManager(manager: CycleManager) {
         cycleManager = manager
@@ -16,10 +15,6 @@ class RAMDevice(size: Int, val ramLatency: Int = 1, val failLatency: Int = 1) : 
 
     override fun tick() {
         // literally 0 effort
-    }
-
-    override fun catchUp(lateCycles: Long) {
-        this.usedCycles = 0 // literally 0 effort
     }
 
     override fun readByteNoEmu(addr: Int): Byte {
@@ -71,66 +66,30 @@ class RAMDevice(size: Int, val ramLatency: Int = 1, val failLatency: Int = 1) : 
     }
 
     override fun readByte(addr: Int, type: MemoryAccessType): ReadAccessResult<Byte> {
-        if (type.isMemoryAccess()) {
-            usedCycles += ramLatency
-            return ReadAccessResult(readByteNoEmu(addr), MemoryAccessStatus.Success)
-        } else {
-            usedCycles += failLatency
-            return ReadAccessResult(0, MemoryAccessStatus.Unsupported)
-        }
+        return ReadAccessResult(readByteNoEmu(addr), MemoryAccessStatus.Success)
     }
 
     override fun writeByte(addr: Int, data: Byte, type: MemoryAccessType): MemoryAccessStatus {
-        if (type.isMemoryAccess()) {
-            writeByteNoEmu(addr, data)
-            usedCycles += ramLatency
-            return MemoryAccessStatus.Success
-        } else {
-            usedCycles += failLatency
-            return MemoryAccessStatus.Unsupported
-        }
+        writeByteNoEmu(addr, data)
+        return MemoryAccessStatus.Success
     }
 
     override fun readWord(addr: Int, type: MemoryAccessType): ReadAccessResult<Short> {
-        if (type.isMemoryAccess()) {
-            usedCycles += ramLatency
-            return ReadAccessResult(readWordNoEmu(addr), MemoryAccessStatus.Success)
-        } else {
-            usedCycles += failLatency
-            return ReadAccessResult(0, MemoryAccessStatus.Unsupported)
-        }
+        return ReadAccessResult(readWordNoEmu(addr), MemoryAccessStatus.Success)
     }
 
     override fun writeWord(addr: Int, data: Short, type: MemoryAccessType): MemoryAccessStatus {
-        if (type.isMemoryAccess()) {
-            usedCycles += ramLatency
             writeWordNoEmu(addr, data)
             return MemoryAccessStatus.Success
-        } else {
-            usedCycles += failLatency
-            return MemoryAccessStatus.Unsupported
-        }
     }
 
     override fun readDoubleWord(addr: Int, type: MemoryAccessType): ReadAccessResult<Int> {
-        if (type.isMemoryAccess()) {
-            usedCycles += ramLatency
             return ReadAccessResult(readDoubleWordNoEmu(addr), MemoryAccessStatus.Success)
-        } else {
-            usedCycles += failLatency
-            return ReadAccessResult(0, MemoryAccessStatus.Unsupported)
-        }
     }
 
     override fun writeDoubleWord(addr: Int, data: Int, type: MemoryAccessType): MemoryAccessStatus {
-        if (type.isMemoryAccess()) {
-            usedCycles += ramLatency
             writeDoubleWordNoEmu(addr, data)
             return MemoryAccessStatus.Success
-        } else {
-            usedCycles += failLatency
-            return MemoryAccessStatus.Unsupported
-        }
     }
 }
 
@@ -175,11 +134,7 @@ class ROMDevice(val backingArray: ByteBuffer) : MemoryDevice {
     }
 
     override fun readByte(addr: Int, type: MemoryAccessType): ReadAccessResult<Byte> {
-        if (type.isMemoryAccess()) {
-            return ReadAccessResult(readByteNoEmu(addr), MemoryAccessStatus.Success)
-        } else {
-            return ReadAccessResult(0, MemoryAccessStatus.Unsupported)
-        }
+        return ReadAccessResult(readByteNoEmu(addr), MemoryAccessStatus.Success)
     }
 
     override fun writeByte(addr: Int, data: Byte, type: MemoryAccessType): MemoryAccessStatus {
@@ -187,11 +142,7 @@ class ROMDevice(val backingArray: ByteBuffer) : MemoryDevice {
     }
 
     override fun readWord(addr: Int, type: MemoryAccessType): ReadAccessResult<Short> {
-        if (type.isMemoryAccess()) {
-            return ReadAccessResult(readWordNoEmu(addr), MemoryAccessStatus.Success)
-        } else {
-            return ReadAccessResult(0, MemoryAccessStatus.Unsupported)
-        }
+        return ReadAccessResult(readWordNoEmu(addr), MemoryAccessStatus.Success)
     }
 
     override fun writeWord(addr: Int, data: Short, type: MemoryAccessType): MemoryAccessStatus {
@@ -199,11 +150,7 @@ class ROMDevice(val backingArray: ByteBuffer) : MemoryDevice {
     }
 
     override fun readDoubleWord(addr: Int, type: MemoryAccessType): ReadAccessResult<Int> {
-        if (type.isMemoryAccess()) {
-            return ReadAccessResult(readDoubleWordNoEmu(addr), MemoryAccessStatus.Success)
-        } else {
-            return ReadAccessResult(0, MemoryAccessStatus.Unsupported)
-        }
+        return ReadAccessResult(readDoubleWordNoEmu(addr), MemoryAccessStatus.Success)
     }
 
     override fun writeDoubleWord(addr: Int, data: Int, type: MemoryAccessType): MemoryAccessStatus {

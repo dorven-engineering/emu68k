@@ -4,21 +4,11 @@ import org.jetbrains.annotations.NotNull
 import java.util.*
 
 enum class MemoryAccessType {
-    Reserved0,
     UserData,
     UserProgram,
-    Custom,
-    Reserved4,
     SuperData,
     SuperProgram,
-    CPUSpace;
-
-    fun isMemoryAccess(): Boolean {
-        if (this == Reserved0 || this == Custom || this == Reserved4 || this == CPUSpace) {
-            return false
-        }
-        return true
-    }
+    Hardware
 }
 
 enum class MemoryAccessStatus {
