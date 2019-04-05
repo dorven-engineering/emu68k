@@ -23,7 +23,7 @@ class Decoder {
     val len2 = BitField(0x1C)
 
     fun decode(parcel: Int, parcel_addr: Long): DecoderResult {
-        if (prevParcel != 0 && 1 + prevParcelAddr == parcel_addr) {
+        if (prevParcel != 0 && prevParcelAddr + 2 == parcel_addr) {
             val inst = parcel.shl(16) + prevParcel
             if (!len1.isAllSet(inst) || len2.isAllSet(inst)) {
                 // TODO("Tell emulator how many parcels would be expected")
