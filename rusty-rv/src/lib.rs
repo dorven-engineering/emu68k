@@ -1,6 +1,7 @@
 extern crate bytes;
 
 pub mod memory;
+pub mod defs;
 
 #[cfg(test)]
 mod tests {
