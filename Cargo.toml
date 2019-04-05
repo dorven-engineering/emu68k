@@ -1,0 +1,5 @@
+[workspace]
+
+members = [
+    "rusty-rv", "rusty-rv-cli", "rusty-rv-jni"
+]
