@@ -5,3 +5,4 @@ authors = ["Birk Hirdman <lonjil@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+bytes = "0.4.12"

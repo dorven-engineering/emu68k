@@ -19,3 +19,6 @@ classes/
 bin/
 .classpath
 .project
+
+# Rust
+target/
