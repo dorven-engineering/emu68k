@@ -13,7 +13,7 @@ pub enum MemoryAccessResult {
 pub trait MemoryDevice {
 	fn device_size(&self) -> usize;
 
-	fn read_at(&self, addr: Address) -> MemoryAccessResult;
+	fn read_at(&self, addr: Address, amount: Address) -> MemoryAccessResult;
 
-	fn write_at(&mut self, addr: Address) -> MemoryAccessResult;
+	fn write_at(&mut self, addr: Address, amount: Address) -> MemoryAccessResult;
 }
