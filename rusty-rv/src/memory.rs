@@ -6,14 +6,24 @@ pub enum MemoryAccessResult {
 	SuccessfulWrite(BytesMut),
 	InvalidAddress,
 	DeviceFailure,
-	WriteFailAt(Vec<AddrRange>), // Writes and reads can fail at multiple positions for multiple ranges of addresses.
+	WriteFailAt(Vec<AddrRange>), /* Writes and reads can fail at
+	                              * multiple positions for multiple
+	                              * ranges of addresses. */
 	ReadFailAt(Vec<AddrRange>),
 }
 
 pub trait MemoryDevice {
 	fn device_size(&self) -> usize;
 
-	fn read_at(&self, addr: Address, amount: Address) -> MemoryAccessResult;
+	fn read_at(
+		&self,
+		addr: Address,
+		amount: Address,
+	) -> MemoryAccessResult;
 
-	fn write_at(&mut self, addr: Address, amount: Address) -> MemoryAccessResult;
+	fn write_at(
+		&mut self,
+		addr: Address,
+		amount: Address,
+	) -> MemoryAccessResult;
 }
