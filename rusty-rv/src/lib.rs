@@ -1,4 +1,5 @@
 extern crate bytes;
+extern crate either;
 
 pub mod clocked;
 pub mod defs;
