@@ -33,6 +33,8 @@ pub trait MemoryDevice {
 pub enum MemoryReadFailureReason {
 	OutOfBounds,
 	DeviceFailure,
+	UnsupportedOperaton,
+	InternalError(/*TODO*/),
 }
 
 pub trait ManagedMemoryDevice {
@@ -83,6 +85,7 @@ pub enum MemoryAccessFailure {
 	LocationReadOnly,
 	LocationWriteOnly,
 	LocationEmpty,
+	InternalError(/* TODO */),
 }
 
 pub trait MemoryManager<VirtStructure> {
